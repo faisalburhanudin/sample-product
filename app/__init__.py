@@ -1,34 +1,9 @@
 import os
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-from app import route
-
-
-class Database(SQLAlchemy):
-
-    def __init__(self):
-        super().__init__()
-
-    def create_all(self, bind='__all__', app=None):
-        """Destructive method, override create all to make sure only create memory database"""
-        self._memory_only(app=app)
-        self._execute_for_all_tables(app, bind, 'create_all')
-
-    def drop_all(self, bind='__all__', app=None):
-        """Destructive method, override drop all to make sure only drop memory database"""
-        self._memory_only(app=app)
-        self._execute_for_all_tables(app, bind, 'drop_all')
-
-    def _memory_only(self, app):
-        """make sure to drop sqlite memory only"""
-        database_uri = self.get_app(app).config['SQLALCHEMY_DATABASE_URI']
-        if database_uri != "sqlite:///:memory:":
-            raise Exception("Cannot drop_all except sqlite:///:memory:")
-
-
-db = Database()
+from app import route, model
 
 
 class Config(object):
@@ -44,5 +19,6 @@ def create_app():
 
     app.register_blueprint(route.bp)
 
-    db.init_app(app)
+    model.db.init_app(app)
+    Migrate(app, model.db)
     return app
