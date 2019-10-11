@@ -52,9 +52,9 @@ class User(db.Model):
 
     email = db.Column(db.String(50), unique=True, nullable=False)
 
-    photo_filename = db.Column(db.String(225), unique=True, nullable=False)
+    photo_filename = db.Column(db.String(225), unique=True, nullable=False, default="")
 
-    clothes_size_value = db.Column(db.Integer, nullable=False)
+    clothes_size_value = db.Column(db.Integer, nullable=False, default=0)
 
     def set_clothes_size(self, size: ClothesSize):
         """set user clothes size
