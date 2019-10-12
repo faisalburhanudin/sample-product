@@ -3,15 +3,10 @@ import logging
 from flask import Blueprint, jsonify, request
 
 from app import user
+from app.exception import RequestError
 
 bp = Blueprint("route", __name__)
 log = logging.getLogger(__name__)
-
-
-class RequestError(Exception):
-    def __init__(self, message, status_code=400):
-        self.message = message
-        self.status_code = status_code
 
 
 @bp.route("/")
@@ -67,6 +62,25 @@ def delete_user(user_id):
 
     response = {
         "message": "delete success"
+    }
+
+    return jsonify(response)
+
+
+@bp.route("/user/<user_id>", methods=["post"])
+def update_user(user_id):
+    """Update user"""
+    username = request.form.get("username")
+    email = request.form.get("email")
+
+    usr = user.update(user_id, username=username, email=email)
+
+    response = {
+        "id": usr.id,
+        "username": usr.username,
+        "email": usr.email,
+        "photo": usr.photo_url,
+        "clothes_size": usr.clothes_size
     }
 
     return jsonify(response)

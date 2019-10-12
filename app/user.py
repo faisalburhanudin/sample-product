@@ -1,5 +1,6 @@
 from typing import Optional
 
+from app.exception import UserNotFound
 from app.model import db, User
 
 
@@ -40,6 +41,34 @@ def delete(user_id: int):
         user_id: id user will be deleted
     """
     usr = get_by_id(user_id)
-    if usr:
-        db.session.delete(usr)
-        db.session.commit()
+    if not usr:
+        raise UserNotFound
+
+    db.session.delete(usr)
+    db.session.commit()
+
+
+def update(user_id: int, username: str = None, email: str = None) -> User:
+    """Update user information
+
+    Args:
+        user_id: id user will be update
+        username: new username
+        email: new email
+
+    Returns:
+        User object
+    """
+    usr = get_by_id(user_id)
+    if not usr:
+        raise UserNotFound
+
+    if username is not None:
+        usr.username = username
+
+    if email is not None:
+        usr.email = email
+
+    db.session.add(usr)
+    db.session.commit()
+    return usr

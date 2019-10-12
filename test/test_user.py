@@ -47,3 +47,22 @@ def test_delete(client):
 
     usr = user.get_by_id(usr.id)
     assert usr is None
+
+
+def test_update(client):
+    usr = user.create(username="faisal", email="faisalburhanudin@gmail.com")
+
+    response = client.post(f"/user/{usr.id}", data={
+        "username": "burhan",
+        "email": "this-is-my-email@mail.com"
+    })
+
+    expected = {
+        "id": 1,
+        "username": "burhan",
+        "email": "this-is-my-email@mail.com",
+        "photo": "",
+        "clothes_size": None
+    }
+
+    assert response.json == expected
