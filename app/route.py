@@ -24,6 +24,7 @@ def home():
 
 @bp.route("/user", methods=["POST"])
 def create_user():
+    """Create User endpoint"""
     username = request.form.get("username")
     email = request.form.get("email")
 
@@ -31,6 +32,22 @@ def create_user():
         raise RequestError("missing username and email")
 
     usr = user.create(username=username, email=email)
+
+    response = {
+        "id": usr.id,
+        "username": usr.username,
+        "email": usr.email,
+        "photo": usr.photo_url,
+        "clothes_size": usr.clothes_size
+    }
+
+    return jsonify(response)
+
+
+@bp.route("/user/<user_id>")
+def get_user(user_id):
+    """Get user by id"""
+    usr = user.get_by_id(user_id)
 
     response = {
         "id": usr.id,
