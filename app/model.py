@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -59,7 +60,8 @@ class User(db.Model):
     def set_clothes_size(self, size: ClothesSize):
         """set user clothes size
 
-        :param size: instance of ClothesSize
+        Args:
+            size: instance of ClothesSize
         """
         if isinstance(size, ClothesSize):
             raise WrongClothesSize
@@ -67,9 +69,17 @@ class User(db.Model):
         self.clothes_size_value = size.value
 
     @property
-    def clothes_size(self) -> ClothesSize:
+    def clothes_size(self) -> Optional[ClothesSize]:
         """get clothes size in enum format
 
-        :return: ClothesSize object
+        Returns:
+            ClothesSize object
         """
-        return ClothesSize(self.clothes_size_value)
+        if self.clothes_size_value:
+            return ClothesSize(self.clothes_size_value)
+        return None
+
+    @property
+    def photo_url(self):
+        """todo get photo url"""
+        return ""
