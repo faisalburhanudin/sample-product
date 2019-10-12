@@ -60,6 +60,18 @@ def get_user(user_id):
     return jsonify(response)
 
 
+@bp.route("/user/<user_id>", methods=["delete"])
+def delete_user(user_id):
+    """Delete user by id"""
+    user.delete(user_id)
+
+    response = {
+        "message": "delete success"
+    }
+
+    return jsonify(response)
+
+
 @bp.app_errorhandler(RequestError)
 def handling_request_error(e):
     log.warning(e)

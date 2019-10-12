@@ -31,3 +31,15 @@ def get_by_id(user_id: int) -> Optional[User]:
     """
     user = User.query.filter_by(id=user_id).first()
     return user
+
+
+def delete(user_id: int):
+    """Delete user by id
+
+    Args:
+        user_id: id user will be deleted
+    """
+    usr = get_by_id(user_id)
+    if usr:
+        db.session.delete(usr)
+        db.session.commit()

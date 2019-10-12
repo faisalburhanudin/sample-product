@@ -32,3 +32,18 @@ def test_read(client):
     }
 
     assert response.json == expected
+
+
+def test_delete(client):
+    usr = user.create(username="faisal", email="faisalburhanudin@gmail.com")
+
+    response = client.delete(f"/user/{usr.id}")
+
+    expected = {
+        "message": "delete success"
+    }
+
+    assert response.json == expected
+
+    usr = user.get_by_id(usr.id)
+    assert usr is None
