@@ -9,8 +9,10 @@ def client():
     instance = app.create_app()
     instance.app_context().push()
 
-    db.create_all()
+    with instance.app_context():
+        db.create_all()
 
     yield instance.test_client()
 
-    db.drop_all()
+    with instance.app_context():
+        db.drop_all()
