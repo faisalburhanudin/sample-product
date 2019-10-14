@@ -47,7 +47,7 @@ class WrongClothesSize(Exception):
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
 
     username = db.Column(db.String(50), unique=True, nullable=False)
 
@@ -56,6 +56,15 @@ class User(db.Model):
     photo_filename = db.Column(db.String(225), unique=True, nullable=False, default="")
 
     clothes_size_value = db.Column(db.Integer, nullable=False, default=0)
+
+    def __init__(self, username: str, email: str):
+        """
+        Args:
+            username: name of user
+            email: email of user
+        """
+        self.username = username
+        self.email = email
 
     def set_clothes_size(self, size: ClothesSize):
         """set user clothes size
@@ -83,3 +92,41 @@ class User(db.Model):
     def photo_url(self):
         """todo get photo url"""
         return ""
+
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+
+    name = db.Column(db.String(100), nullable=False)
+
+    price = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, name: str, price: int):
+        """
+        Args:
+            name: name of product
+            price: price of product
+        """
+        self.name = name
+        self.price = price
+
+
+class UserProduct(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+
+    product_id = db.Column(db.Integer, nullable=False)
+
+    user_id = db.Column(db.Integer, nullable=False)
+
+    quantity = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, product_id: int, user_id: int, quantity: int = 1):
+        """
+        Args:
+            product_id: id product user buy
+            user_id: id user who buy
+            quantity: total quantity per product
+        """
+        self.product_id = product_id
+        self.user_id = user_id
+        self.quantity = quantity
