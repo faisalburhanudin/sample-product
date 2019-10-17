@@ -86,6 +86,31 @@ def update_user(user_id):
     return jsonify(response)
 
 
+@bp.route("/product")
+def list_product():
+    page = request.args.get("page", "1")
+    per_page = request.args.get("per_page", "10")
+
+    page = int(page)
+    per_page = int(per_page)
+    page = product.list_product(page, per_page)
+
+    products = []
+    for p in page.items:
+        products.append({
+            "id": p.id,
+            "name": p.name,
+            "price": p.price
+        })
+
+    response = {
+        "has_next": page.has_next,
+        "has_prev": page.has_prev,
+        "products": products
+    }
+    return jsonify(response)
+
+
 @bp.route("/product", methods=["post"])
 def create_product():
     name = request.form.get("name")

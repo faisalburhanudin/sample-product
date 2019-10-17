@@ -54,3 +54,39 @@ def test_update(client):
     }
 
     assert response.json == expected
+
+
+def test_list_product(client):
+    p1 = product.create(name="product1", price=10000)
+    p2 = product.create(name="product2", price=10000)
+    p3 = product.create(name="product3", price=10000)
+
+    response = client.get("/product?page=1&per_page=2")
+
+    expected = {
+        "has_prev": False,
+        "has_next": True,
+        "products": [{
+            "id": p1.id,
+            "name": "product1",
+            "price": 10000
+        }, {
+            "id": p2.id,
+            "name": "product2",
+            "price": 10000
+        }]
+    }
+    assert response.json == expected
+
+    response2 = client.get("/product?page=2&per_page=2")
+
+    expected2 = {
+        "has_prev": True,
+        "has_next": False,
+        "products": [{
+            "id": p3.id,
+            "name": "product3",
+            "price": 10000
+        }]
+    }
+    assert response2.json == expected2

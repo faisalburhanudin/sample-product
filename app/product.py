@@ -1,3 +1,4 @@
+from collections import namedtuple
 from typing import Optional
 
 from app.exception import ProductNotFound
@@ -66,3 +67,29 @@ def update(product_id: int, name: str = None, price: int = None) -> Product:
     db.session.add(p)
     db.session.commit()
     return p
+
+
+ListProduct = namedtuple("ListProduct", "items has_next has_prev")
+
+
+def list_product(page=1, per_page=10) -> ListProduct:
+    """Get list pof product
+
+    Args:
+        page: get on page
+        per_page: item per page
+
+    Returns:
+        List of product
+    """
+    paginate = Product.query.paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    return ListProduct(
+        items=paginate.items,
+        has_next=paginate.has_next,
+        has_prev=paginate.has_prev
+    )
