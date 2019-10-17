@@ -1,3 +1,5 @@
+import os
+
 import pytest
 import app
 from app.model import db
@@ -7,6 +9,7 @@ from app.model import db
 def client():
     """Create flask test client"""
     instance = app.create_app()
+    instance.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     instance.app_context().push()
 
     with instance.app_context():
