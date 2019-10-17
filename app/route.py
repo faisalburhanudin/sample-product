@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
-from app import user
+from app import user, product
 from app.exception import RequestError
 
 bp = Blueprint("route", __name__)
@@ -83,6 +83,59 @@ def update_user(user_id):
         "clothes_size": usr.clothes_size
     }
 
+    return jsonify(response)
+
+
+@bp.route("/product", methods=["post"])
+def create_product():
+    name = request.form.get("name")
+    price = request.form.get("price")
+
+    p = product.create(name=name, price=price)
+
+    response = {
+        "id": p.id,
+        "name": p.name,
+        "price": p.price
+    }
+
+    return jsonify(response)
+
+
+@bp.route("/product/<product_id>")
+def get_product(product_id):
+    p = product.get_by_id(product_id)
+
+    response = {
+        "id": p.id,
+        "name": p.name,
+        "price": p.price
+    }
+    return jsonify(response)
+
+
+@bp.route("/product/<product_id>", methods=["delete"])
+def delete_product(product_id):
+    product.delete(product_id)
+
+    response = {
+        "message": "delete success"
+    }
+    return jsonify(response)
+
+
+@bp.route("/product/<product_id>", methods=["post"])
+def update_product(product_id):
+    name = request.form.get("name")
+    price = request.form.get("price")
+
+    p = product.update(product_id, name=name, price=price)
+
+    response = {
+        "id": p.id,
+        "name": p.name,
+        "price": p.price
+    }
     return jsonify(response)
 
 

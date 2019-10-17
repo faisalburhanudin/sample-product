@@ -1,5 +1,3 @@
-import os
-
 import pytest
 import app
 from app.model import db

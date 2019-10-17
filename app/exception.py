@@ -9,3 +9,7 @@ class RequestError(Exception):
 
 class UserNotFound(RequestError):
     message = "user not found"
+
+
+class ProductNotFound(RequestError):
+    message = "product not found"
